@@ -1,0 +1,6 @@
+pytesseract
+pdf2image
+Pillow
+spacy
+# You also need to download a spaCy model, e.g., by running:
+# python -m spacy download en_core_web_sm
