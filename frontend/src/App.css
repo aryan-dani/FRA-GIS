@@ -1,0 +1,102 @@
+/* App.css */
+
+body {
+  background-color: #f0f2f5; /* A slightly different, softer grey */
+  color: #1c1e21; /* Facebook's dark grey for text */
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+.app-header {
+  background-color: #ffffff;
+  border-bottom: 1px solid #dddfe2;
+  padding: 0 1rem;
+}
+
+.navbar-brand {
+  font-weight: 600;
+  color: #0d6efd !important;
+}
+
+.dashboard-container {
+  padding-top: 2rem;
+  padding-bottom: 2rem;
+}
+
+.card {
+  margin-top: 1rem;
+  border: 1px solid #dddfe2;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  transition: box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-header {
+  background-color: #f5f6f7;
+  border-bottom: 1px solid #dddfe2;
+  color: #4b4f56;
+  font-weight: 600;
+  border-top-left-radius: 0.5rem;
+  border-top-right-radius: 0.5rem;
+  padding: 0.75rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.footer {
+  padding: 1.5rem 0;
+  background-color: #ffffff;
+  border-top: 1px solid #dddfe2;
+  color: #606770;
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+}
+
+.leaflet-container {
+  border-radius: 0.5rem;
+  border: 1px solid #dddfe2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  margin-top: 1.5rem;
+  color: #606770;
+  background-color: #f0f2f5;
+  border-radius: 0.5rem;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem;
+  min-height: 200px;
+}
+
+.upload-form .form-label {
+  font-weight: 500;
+}
+
+.upload-form .btn-primary {
+  width: 100%;
+  font-weight: 600;
+}
+
+.claims-table-container {
+  overflow-x: auto;
+}
+
+.filter-bar {
+  margin-bottom: 1rem;
+}
+
+.live-search-bar {
+  margin-bottom: 1rem;
+}

@@ -13,5 +13,19 @@ venv/
 .idea/
 
 # Generated files
-OCR/fra_dummy.pdf
-OCR/fra_data.json
+backend/OCR/fra_dummy.pdf
+backend/OCR/fra_data.json
+
+# Backend
+backend/uploads/
+backend/.env
+
+# Build files
+/node_modules/
+frontend/build/
+frontend/node_modules/
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*

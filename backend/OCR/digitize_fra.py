@@ -3,6 +3,7 @@ import json
 import re
 import pytesseract
 from pdf2image import convert_from_path
+from PIL import Image
 
 # Step 1: Define file paths
 PDF_FILE = "fra_dummy.pdf"
@@ -24,32 +25,46 @@ def extract_field(pattern, text):
     return match.group(1).strip() if match else None
 
 
-def digitize_fra_document(pdf_path):
+def digitize_fra_document(file_path):
     """
-    Digitizes a scanned FRA document from a PDF file.
+    Digitizes a scanned FRA document from a PDF or image file.
     Args:
-        pdf_path (str): Path to the PDF file.
+        file_path (str): Path to the PDF or image file.
     Returns:
         dict: Extracted structured data.
     """
-    if not os.path.exists(pdf_path):
-        print(f"Error: PDF file not found at '{pdf_path}'")
+    if not os.path.exists(file_path):
+        print(f"Error: File not found at '{file_path}'")
         return None
 
-    # Step 2: Convert PDF pages to images
-    print("Converting PDF to images...")
-    try:
-        images = convert_from_path(pdf_path)
-    except Exception as e:
-        print(f"Error converting PDF to images: {e}")
-        print("Please ensure you have Poppler installed and in your PATH.")
+    images = []
+    file_extension = os.path.splitext(file_path)[1].lower()
+
+    # Step 2: Convert file to image(s) if necessary
+    if file_extension == '.pdf':
+        print("Converting PDF to images...")
+        try:
+            images = convert_from_path(file_path)
+        except Exception as e:
+            print(f"Error converting PDF to images: {e}")
+            print("Please ensure you have Poppler installed and in your PATH.")
+            return None
+    elif file_extension in ['.png', '.jpg', '.jpeg', '.bmp', '.tiff']:
+        print("Processing image file...")
+        try:
+            images.append(Image.open(file_path))
+        except Exception as e:
+            print(f"Error opening image file: {e}")
+            return None
+    else:
+        print(f"Error: Unsupported file type '{file_extension}'")
         return None
 
     # Step 3: Use Tesseract OCR to extract raw text
     print("Extracting text with Tesseract OCR...")
     raw_text = ""
     for i, image in enumerate(images):
-        print(f"  - Processing page {i+1}...")
+        print(f"  - Processing page/image {i+1}...")
         raw_text += pytesseract.image_to_string(image)
 
     print("\n--- Raw Extracted Text ---")
@@ -96,6 +111,7 @@ def digitize_fra_document(pdf_path):
 
 def main():
     """Main function to run the digitization process."""
+    # Note: This main function is for standalone testing and still uses the PDF_FILE constant.
     fra_data = digitize_fra_document(os.path.join(os.path.dirname(__file__), PDF_FILE))
 
     if fra_data:
