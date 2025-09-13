@@ -1,0 +1,28 @@
+/* Navbar.css */
+.app-navbar {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid #e9ecef;
+}
+
+.navbar-brand-custom {
+  font-weight: 700;
+  color: #2c3e50 !important; /* Dark Slate Blue */
+}
+
+.nav-link {
+  font-weight: 500;
+  color: #34495e !important; /* Lighter Slate */
+  margin: 0 0.5rem;
+  padding: 0.5rem 1rem !important;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.nav-link.active {
+  background-color: #1abc9c; /* Teal */
+  color: #fff !important;
+}
+
+.nav-link:hover:not(.active) {
+  background-color: #f8f9fa;
+}

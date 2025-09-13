@@ -64,7 +64,7 @@ function WebGISMap({ claims }) {
     <MapContainer
       center={defaultPosition}
       zoom={5}
-      style={{ height: "40vh", width: "100%" }}
+      style={{ height: "75vh", width: "100%" }}
       className="leaflet-container"
     >
       <TileLayer

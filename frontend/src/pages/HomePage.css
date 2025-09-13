@@ -1,0 +1,54 @@
+/* HomePage.css */
+.hero-section {
+  background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)),
+    url("https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=1974&auto=format&fit=crop");
+  background-size: cover;
+  background-position: center;
+  padding: 6rem 0;
+}
+
+.hero-section .btn-primary {
+  background-color: #1abc9c;
+  border-color: #1abc9c;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+}
+
+.hero-section .btn-primary:hover {
+  background-color: #16a085;
+  border-color: #16a085;
+}
+
+.features-section {
+  padding: 4rem 0;
+}
+
+.feature-card {
+  border: none;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+}
+
+.feature-icon {
+  color: #1abc9c;
+  margin-bottom: 1rem;
+}
+
+.how-it-works-section {
+  padding: 4rem 0;
+  background-color: #fff;
+}
+
+.how-it-works-section ul li {
+  font-size: 1.1rem;
+  color: #34495e;
+}
+
+.how-it-works-section .check-circle-icon {
+  color: #1abc9c;
+}
