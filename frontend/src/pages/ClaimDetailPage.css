@@ -1,0 +1,75 @@
+.claim-detail-page .card {
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  margin-bottom: 1.5rem;
+}
+
+.claim-detail-page .card-header {
+  background-color: transparent;
+  border-bottom: 1px solid var(--border-color);
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.claim-detail-page .card-header .h5,
+.claim-detail-page .card-header h5 {
+  color: var(--primary-color);
+  margin-bottom: 0;
+  font-weight: 600;
+}
+
+.claim-detail-page .card-body {
+  padding: 1.5rem;
+}
+
+.detail-item {
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.detail-item-label {
+  font-weight: 600;
+  color: var(--accent-color);
+  width: 120px;
+  flex-shrink: 0;
+}
+
+.detail-item-value {
+  color: var(--text-color);
+}
+
+.raw-text-container {
+  background-color: var(--background-color-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-family: "Courier New", Courier, monospace;
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.map-container-detail {
+  height: 500px;
+  border-radius: 0 0 15px 15px;
+  overflow: hidden;
+}
+
+.back-button {
+  background-color: var(--accent-color);
+  border-color: var(--accent-color);
+  font-weight: 600;
+  transition: all 0.2s ease-in-out;
+}
+
+.back-button:hover {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transform: translateY(-1px);
+}

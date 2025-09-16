@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Spinner, Alert, Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
-import { PlusCircle } from "react-bootstrap-icons";
+import { Container, Spinner, Alert } from "react-bootstrap";
 import axios from "axios";
 
 import ClaimsTable from "../components/ClaimsTable";
-import Analytics from "../components/Analytics"; // Import the Analytics component
+import "./ClaimsDataPage.css";
 
 const API_URL = "http://localhost:5001";
 
@@ -19,7 +17,6 @@ function ClaimsDataPage() {
     setError("");
     try {
       const response = await axios.get(`${API_URL}/api/claims`);
-      // Ensure status is at least 'Pending' if not provided
       const claimsWithStatus = response.data.map((claim) => ({
         ...claim,
         status: claim.status || "Pending",
@@ -42,7 +39,7 @@ function ClaimsDataPage() {
       await axios.put(`${API_URL}/api/claims/${claimId}/status`, {
         status: newStatus,
       });
-      // Refresh claims to show the updated status
+      // Re-fetch claims to show the updated status
       fetchClaims();
     } catch (error) {
       console.error("Failed to update status:", error);
@@ -51,40 +48,34 @@ function ClaimsDataPage() {
   };
 
   return (
-    <Container fluid className="py-4">
-      <div className="d-flex justify-content-between align-items-center mb-4">
-        <h2>Tabular Claims Data</h2>
-        <Link to="/add-claim">
-          <Button variant="primary">
-            <PlusCircle className="me-2" />
-            Add New Claim Manually
-          </Button>
-        </Link>
-      </div>
-      <Card>
-        <Card.Body>
-          {error && <Alert variant="danger">{error}</Alert>}
-          {loading ? (
-            <div className="spinner-container">
-              <Spinner animation="border" role="status">
-                <span className="visually-hidden">Loading Claims...</span>
-              </Spinner>
-            </div>
-          ) : (
-            <ClaimsTable
-              claims={claims}
-              loading={loading}
-              onStatusChange={handleStatusChange}
-            />
-          )}
-        </Card.Body>
-      </Card>
+    <div className="claims-data-page">
+      <Container fluid>
+        <div className="page-header">
+          <h1 className="page-title">Claims Database</h1>
+          <p className="page-subtitle">
+            Search, filter, and manage all digitized claims.
+          </p>
+        </div>
 
-      {/* Analytics Section */}
-      <div className="mt-5">
-        <Analytics claims={claims} />
-      </div>
-    </Container>
+        <div className="card shadow-sm">
+          <div className="card-body">
+            {error && <Alert variant="danger">{error}</Alert>}
+            {loading ? (
+              <div className="spinner-container">
+                <Spinner animation="border" role="status">
+                  <span className="visually-hidden">Loading Claims...</span>
+                </Spinner>
+              </div>
+            ) : (
+              <ClaimsTable
+                claims={claims}
+                onStatusChange={handleStatusChange}
+              />
+            )}
+          </div>
+        </div>
+      </Container>
+    </div>
   );
 }
 

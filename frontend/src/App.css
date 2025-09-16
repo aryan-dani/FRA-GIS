@@ -1,14 +1,16 @@
 /* App.css */
 
 :root {
-  --primary-color: #2c3e50; /* Dark Slate Blue */
-  --secondary-color: #34495e; /* Lighter Slate */
-  --accent-color: #1abc9c; /* Teal/Turquoise */
-  --background-color: #f8f9fa; /* Very light grey */
-  --text-color: #34495e;
+  --primary-color: #004d40; /* Dark Green for text, headers */
+  --secondary-color: #00695c; /* Medium Green for secondary elements */
+  --accent-color: #2e7d32; /* Solid Green for buttons, actions */
+  --light-accent-color: #a5d6a7; /* Light Green for highlights/backgrounds */
+  --background-color: #f0f4f0; /* Very light green/grey for page backgrounds */
+  --text-color: #212529; /* Dark grey for body text */
+  --secondary-text: #6c757d; /* Lighter grey for subtitles */
   --card-bg-color: #ffffff;
-  --card-header-color: #ffffff;
-  --border-color: #e9ecef;
+  --border-color: #dee2e6;
+  --dark-bg: #1a2a27; /* Very dark green for footers or special sections */
 }
 
 body {
@@ -26,20 +28,16 @@ body {
 
 .main-content {
   flex: 1;
-  padding: 1.5rem;
-}
-
-.dashboard-container {
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+  padding-top: 80px; /* Add padding to account for floating navbar */
 }
 
 .card {
   border: 1px solid var(--border-color);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem; /* Slightly more rounded corners */
   transition: box-shadow 0.2s ease-in-out;
   height: 100%;
+  background-color: var(--card-bg-color);
 }
 
 .card:hover {
@@ -47,23 +45,35 @@ body {
 }
 
 .card-header {
-  background-color: var(--card-header-color);
+  background-color: var(--card-bg-color);
   border-bottom: 1px solid var(--border-color);
   color: var(--primary-color);
   font-weight: 600;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  border-top-left-radius: 0.75rem;
+  border-top-right-radius: 0.75rem;
+  padding: 1rem 1.25rem;
   display: flex;
   align-items: center;
   gap: 0.75rem;
 }
 
+.btn-primary {
+  background-color: var(--accent-color) !important;
+  border-color: var(--accent-color) !important;
+  font-weight: 600 !important;
+  transition: background-color 0.2s ease-in-out, border-color 0.2s ease-in-out;
+}
+
+.btn-primary:hover {
+  background-color: var(--secondary-color) !important;
+  border-color: var(--secondary-color) !important;
+}
+
 .leaflet-container {
   border-radius: 0;
   border: none;
-  border-bottom-left-radius: 0.5rem;
-  border-bottom-right-radius: 0.5rem;
+  border-bottom-left-radius: 0.75rem;
+  border-bottom-right-radius: 0.75rem;
 }
 
 .spinner-container {
@@ -74,30 +84,26 @@ body {
   min-height: 200px;
 }
 
-.upload-form .form-label {
-  font-weight: 500;
+.page-header {
+  background: linear-gradient(
+    to right,
+    var(--primary-color),
+    var(--secondary-color)
+  );
+  color: white;
+  padding: 2rem;
+  border-radius: 0.75rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 77, 64, 0.2);
 }
 
-.upload-form .btn-primary {
-  background-color: var(--accent-color);
-  border-color: var(--accent-color);
-  width: 100%;
-  font-weight: 600;
+.page-header .page-title {
+  color: white;
+  font-weight: 700;
+  margin: 0;
 }
 
-.upload-form .btn-primary:hover {
-  background-color: #16a085; /* Darker shade of accent */
-  border-color: #16a085;
-}
-
-.claims-table-container {
-  overflow-x: auto;
-}
-
-.filter-bar {
-  margin-bottom: 1rem;
-}
-
-.live-search-bar {
-  margin-bottom: 1rem;
+.page-header .page-subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
 }

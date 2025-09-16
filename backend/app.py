@@ -88,7 +88,7 @@ def _ocr_with_google_vision(file_path):
             img_byte_arr = io.BytesIO()
             image_pil.save(img_byte_arr, format='PNG')
             image = vision.Image(content=img_byte_arr.getvalue())
-            response = vision_client.text_detection(image=image)
+            response = vision_client.annotate_image({'image': image, 'features': [{'type_': vision.Feature.Type.DOCUMENT_TEXT_DETECTION}]})
             if response.error.message:
                 raise Exception(f"Google Vision API Error: {response.error.message}")
             text += response.full_text_annotation.text + "\n"
@@ -96,7 +96,7 @@ def _ocr_with_google_vision(file_path):
         with io.open(file_path, 'rb') as image_file:
             content = image_file.read()
         image = vision.Image(content=content)
-        response = vision_client.text_detection(image=image)
+        response = vision_client.annotate_image({'image': image, 'features': [{'type_': vision.Feature.Type.DOCUMENT_TEXT_DETECTION}]})
         if response.error.message:
             raise Exception(f"Google Vision API Error: {response.error.message}")
         text = response.full_text_annotation.text

@@ -1,0 +1,22 @@
+.dashboard-page {
+  padding: 2rem;
+  background-color: var(--light-bg);
+}
+
+.page-title {
+  font-weight: 700;
+  color: var(--dark-text);
+  margin-bottom: 0.5rem;
+}
+
+.page-subtitle {
+  color: var(--secondary-text);
+  margin-bottom: 2rem;
+}
+
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 60vh;
+}

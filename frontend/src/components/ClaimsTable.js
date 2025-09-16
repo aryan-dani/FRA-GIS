@@ -1,41 +1,88 @@
 import React, { useState, useMemo } from "react";
 import {
-  Table,
   Form,
   Row,
   Col,
   InputGroup,
   Spinner,
+  Pagination,
   Dropdown,
-  Badge,
+  Button,
 } from "react-bootstrap";
-import { Search, Eye } from "react-bootstrap-icons";
-import { Link } from "react-router-dom";
+import {
+  Search,
+  PencilSquare,
+  PlusCircle,
+  Download,
+} from "react-bootstrap-icons";
+import { Link, useNavigate } from "react-router-dom";
+import "./ClaimsTable.css";
 
-const getStatusBadge = (status) => {
-  switch (status) {
-    case "Approved":
-      return "success";
-    case "Rejected":
-      return "danger";
-    case "Pending":
-    default:
-      return "warning";
-  }
-};
+const ROWS_PER_PAGE = 10;
 
-function ClaimsTable({ claims, loading, onStatusChange }) {
+function ClaimsTable({ claims, onStatusChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     state: "",
     district: "",
-    claim_type: "",
     status: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleFilterChange = (e) => {
     const { name, value } = e.target;
     setFilters((prev) => ({ ...prev, [name]: value }));
+    setCurrentPage(1);
+  };
+
+  const handleStatusUpdate = async (claimId, newStatus) => {
+    setLoading(true);
+    await onStatusChange(claimId, newStatus);
+    setLoading(false);
+  };
+
+  const handleRowClick = (claimId) => {
+    navigate(`/claim/${claimId}`);
+  };
+
+  const exportToCSV = () => {
+    const headers = [
+      "ID",
+      "Name",
+      "Village",
+      "District",
+      "State",
+      "Status",
+      "Claim Type",
+      "Created At",
+    ];
+    const rows = filteredClaims.map((claim) => [
+      claim.id,
+      claim.name,
+      claim.village,
+      claim.district,
+      claim.state,
+      claim.status,
+      claim.claim_type,
+      claim.created_at,
+    ]);
+
+    let csvContent = "data:text/csv;charset=utf-8,";
+    csvContent += headers.join(",") + "\r\n";
+    rows.forEach((rowArray) => {
+      const row = rowArray.join(",");
+      csvContent += row + "\r\n";
+    });
+
+    const encodedUri = encodeURI(csvContent);
+    const link = document.createElement("a");
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", "claims_data.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
 
   const filteredClaims = useMemo(() => {
@@ -46,19 +93,24 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
           !searchTerm ||
           claim.name?.toLowerCase().includes(searchLower) ||
           claim.village?.toLowerCase().includes(searchLower) ||
-          claim.district?.toLowerCase().includes(searchLower) ||
-          claim.state?.toLowerCase().includes(searchLower)
+          claim.district?.toLowerCase().includes(searchLower)
         );
       })
       .filter((claim) => {
         return (
           (!filters.state || claim.state === filters.state) &&
           (!filters.district || claim.district === filters.district) &&
-          (!filters.claim_type || claim.claim_type === filters.claim_type) &&
           (!filters.status || claim.status === filters.status)
         );
       });
   }, [claims, searchTerm, filters]);
+
+  const paginatedClaims = useMemo(() => {
+    const startIndex = (currentPage - 1) * ROWS_PER_PAGE;
+    return filteredClaims.slice(startIndex, startIndex + ROWS_PER_PAGE);
+  }, [filteredClaims, currentPage]);
+
+  const totalPages = Math.ceil(filteredClaims.length / ROWS_PER_PAGE);
 
   const uniqueStates = useMemo(
     () => [...new Set(claims.map((c) => c.state).filter(Boolean))],
@@ -68,10 +120,6 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
     () => [...new Set(claims.map((c) => c.district).filter(Boolean))],
     [claims]
   );
-  const uniqueClaimTypes = useMemo(
-    () => [...new Set(claims.map((c) => c.claim_type).filter(Boolean))],
-    [claims]
-  );
   const uniqueStatuses = useMemo(
     () => [...new Set(claims.map((c) => c.status).filter(Boolean))],
     [claims]
@@ -79,27 +127,30 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
 
   return (
     <div>
-      <Row className="filter-bar mb-3">
-        <Col lg={3} md={6} className="mb-2">
+      <Row className="filter-bar align-items-center mb-3">
+        <Col lg={3} md={6} className="mb-2 mb-md-0">
           <InputGroup>
             <InputGroup.Text>
               <Search />
             </InputGroup.Text>
             <Form.Control
               type="text"
-              placeholder="Live search..."
+              placeholder="Search..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => {
+                setSearchTerm(e.target.value);
+                setCurrentPage(1);
+              }}
             />
           </InputGroup>
         </Col>
-        <Col lg={2} md={6} className="mb-2">
+        <Col lg={2} md={3} sm={6} className="mb-2 mb-md-0">
           <Form.Select
             name="state"
             value={filters.state}
             onChange={handleFilterChange}
           >
-            <option value="">Filter by State</option>
+            <option value="">All States</option>
             {uniqueStates.map((state) => (
               <option key={state} value={state}>
                 {state}
@@ -107,13 +158,13 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
             ))}
           </Form.Select>
         </Col>
-        <Col lg={2} md={4} className="mb-2">
+        <Col lg={2} md={3} sm={6} className="mb-2 mb-md-0">
           <Form.Select
             name="district"
             value={filters.district}
             onChange={handleFilterChange}
           >
-            <option value="">Filter by District</option>
+            <option value="">All Districts</option>
             {uniqueDistricts.map((district) => (
               <option key={district} value={district}>
                 {district}
@@ -121,27 +172,13 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
             ))}
           </Form.Select>
         </Col>
-        <Col lg={2} md={4} className="mb-2">
-          <Form.Select
-            name="claim_type"
-            value={filters.claim_type}
-            onChange={handleFilterChange}
-          >
-            <option value="">By Type</option>
-            {uniqueClaimTypes.map((type) => (
-              <option key={type} value={type}>
-                {type}
-              </option>
-            ))}
-          </Form.Select>
-        </Col>
-        <Col lg={2} md={4} className="mb-2">
+        <Col lg={2} md={3} sm={6} className="mb-2 mb-md-0">
           <Form.Select
             name="status"
             value={filters.status}
             onChange={handleFilterChange}
           >
-            <option value="">By Status</option>
+            <option value="">All Statuses</option>
             {uniqueStatuses.map((status) => (
               <option key={status} value={status}>
                 {status}
@@ -149,82 +186,130 @@ function ClaimsTable({ claims, loading, onStatusChange }) {
             ))}
           </Form.Select>
         </Col>
+        <Col
+          lg={3}
+          md={9}
+          sm={12}
+          className="d-flex justify-content-start justify-content-md-end mt-2 mt-md-0"
+        >
+          <Button
+            variant="outline-secondary"
+            className="me-2"
+            onClick={exportToCSV}
+          >
+            <Download className="me-1" />
+            Export
+          </Button>
+          <Link to="/add-claim">
+            <Button variant="primary" className="add-claim-button">
+              <PlusCircle className="me-1" />
+              New Claim
+            </Button>
+          </Link>
+        </Col>
       </Row>
 
       <div className="claims-table-container">
-        <Table striped bordered hover responsive>
+        <table className="claims-table">
           <thead>
             <tr>
-              <th>#</th>
               <th>Name</th>
               <th>Village</th>
               <th>District</th>
-              <th>Claim Type</th>
+              <th>State</th>
               <th>Status</th>
               <th>Actions</th>
             </tr>
           </thead>
           <tbody>
-            {loading ? (
+            {loading && (
               <tr>
-                <td colSpan="7" className="text-center">
+                <td colSpan="6" className="text-center">
                   <Spinner animation="border" size="sm" /> Updating...
                 </td>
               </tr>
-            ) : filteredClaims.length > 0 ? (
-              filteredClaims.map((claim, index) => (
-                <tr key={claim.id}>
-                  <td>{index + 1}</td>
-                  <td>{claim.name || "N/A"}</td>
-                  <td>{claim.village || "N/A"}</td>
-                  <td>{claim.district || "N/A"}</td>
-                  <td>{claim.claim_type || "N/A"}</td>
-                  <td>
-                    <Dropdown
-                      onSelect={(newStatus) =>
-                        onStatusChange(claim.id, newStatus)
-                      }
-                    >
-                      <Dropdown.Toggle
-                        variant={getStatusBadge(claim.status)}
-                        id={`dropdown-status-${claim.id}`}
-                        size="sm"
-                      >
-                        {claim.status || "N/A"}
-                      </Dropdown.Toggle>
-                      <Dropdown.Menu>
-                        <Dropdown.Item eventKey="Approved">
-                          Approved
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="Rejected">
-                          Rejected
-                        </Dropdown.Item>
-                        <Dropdown.Item eventKey="Pending">
-                          Pending
-                        </Dropdown.Item>
-                      </Dropdown.Menu>
-                    </Dropdown>
-                  </td>
-                  <td>
-                    <Link
-                      to={`/claim/${claim.id}`}
-                      className="btn btn-outline-primary btn-sm"
-                    >
-                      <Eye className="me-1" /> View
-                    </Link>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="text-center">
-                  No claims found.
-                </td>
-              </tr>
             )}
+            {!loading && paginatedClaims.length > 0
+              ? paginatedClaims.map((claim) => (
+                  <tr
+                    key={claim.id}
+                    onClick={() => handleRowClick(claim.id)}
+                    className="clickable-row"
+                  >
+                    <td>{claim.name || "N/A"}</td>
+                    <td>{claim.village || "N/A"}</td>
+                    <td>{claim.district || "N/A"}</td>
+                    <td>{claim.state || "N/A"}</td>
+                    <td>
+                      <div
+                        className={`status-indicator status-${
+                          claim.status || "Pending"
+                        }`}
+                      >
+                        {claim.status || "Pending"}
+                      </div>
+                    </td>
+                    <td>
+                      <Dropdown
+                        onSelect={(newStatus) =>
+                          handleStatusUpdate(claim.id, newStatus)
+                        }
+                        className="d-inline action-dropdown"
+                        onClick={(e) => e.stopPropagation()}
+                      >
+                        <Dropdown.Toggle
+                          as="button"
+                          className="action-button"
+                          title="Change Status"
+                        >
+                          <PencilSquare />
+                        </Dropdown.Toggle>
+                        <Dropdown.Menu>
+                          <Dropdown.Item eventKey="Approved">
+                            Approved
+                          </Dropdown.Item>
+                          <Dropdown.Item eventKey="Rejected">
+                            Rejected
+                          </Dropdown.Item>
+                          <Dropdown.Item eventKey="Pending">
+                            Pending
+                          </Dropdown.Item>
+                        </Dropdown.Menu>
+                      </Dropdown>
+                    </td>
+                  </tr>
+                ))
+              : !loading && (
+                  <tr>
+                    <td colSpan="6" className="text-center p-4">
+                      No claims match the current filters.
+                    </td>
+                  </tr>
+                )}
           </tbody>
-        </Table>
+        </table>
       </div>
+      {totalPages > 1 && (
+        <Pagination>
+          <Pagination.Prev
+            onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+          />
+          {[...Array(totalPages).keys()].map((page) => (
+            <Pagination.Item
+              key={page + 1}
+              active={page + 1 === currentPage}
+              onClick={() => setCurrentPage(page + 1)}
+            >
+              {page + 1}
+            </Pagination.Item>
+          ))}
+          <Pagination.Next
+            onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+          />
+        </Pagination>
+      )}
     </div>
   );
 }

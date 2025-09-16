@@ -7,19 +7,13 @@ import {
   InfoCircle,
   Speedometer2,
   Table,
-  GraphUp, // Import new icon
+  BarChartLine,
 } from "react-bootstrap-icons";
 import "./Navbar.css";
 
 function AppNavbar() {
   return (
-    <Navbar
-      bg="light"
-      variant="light"
-      expand="lg"
-      className="app-navbar"
-      sticky="top"
-    >
+    <Navbar variant="light" expand="lg" className="floating-navbar" fixed="top">
       <Container>
         <Navbar.Brand as={NavLink} to="/" className="navbar-brand-custom">
           <Globe className="me-2" />
@@ -35,9 +29,11 @@ function AppNavbar() {
               <Speedometer2 className="me-1" /> Dashboard
             </Nav.Link>
             <Nav.Link as={NavLink} to="/claims-data">
-              <Table className="me-1" /> Data Table
+              <Table className="me-1" /> Claims Data
             </Nav.Link>
-            {/* Link to Analytics will be handled by the ClaimsDataPage for now */}
+            <Nav.Link as={NavLink} to="/analytics">
+              <BarChartLine className="me-1" /> Analytics
+            </Nav.Link>
             <Nav.Link as={NavLink} to="/about">
               <InfoCircle className="me-1" /> About
             </Nav.Link>

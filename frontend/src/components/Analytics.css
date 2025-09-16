@@ -1,10 +1,35 @@
-.analytics-card {
-  margin-top: 2rem;
+.chart-container {
+  position: relative;
+  height: 300px;
 }
 
-.chart-title {
-  text-align: center;
-  margin-bottom: 1.5rem;
-  font-size: 1.2rem;
+.stat-card-analytics {
+  background-color: #fff;
+  border-radius: 0.75rem;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.stat-icon {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 1rem;
   color: var(--primary-color);
+}
+
+.stat-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.stat-title {
+  font-size: 1rem;
+  color: var(--secondary-text);
 }

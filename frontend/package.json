@@ -10,6 +10,8 @@
     "axios": "^1.11.0",
     "bootstrap": "^5.3.8",
     "chart.js": "^4.5.0",
+    "chartjs-adapter-date-fns": "^3.0.0",
+    "date-fns": "^4.1.0",
     "leaflet": "^1.9.4",
     "react": "^19.1.1",
     "react-bootstrap": "^2.10.10",

@@ -1,54 +1,66 @@
-/* HomePage.css */
-.hero-section {
-  background: linear-gradient(rgba(44, 62, 80, 0.7), rgba(44, 62, 80, 0.7)),
-    url("https://images.unsplash.com/photo-1476231682828-37e571bc172f?q=80&w=1974&auto=format&fit=crop");
-  background-size: cover;
-  background-position: center;
-  padding: 6rem 0;
+.homepage {
+  padding: 3rem 1rem;
 }
 
-.hero-section .btn-primary {
-  background-color: #1abc9c;
-  border-color: #1abc9c;
-  font-weight: 600;
-  padding: 0.75rem 1.5rem;
+.welcome-section {
+  margin-bottom: 3rem;
 }
 
-.hero-section .btn-primary:hover {
-  background-color: #16a085;
-  border-color: #16a085;
+.welcome-section h1 {
+  color: var(--primary-color);
+  font-weight: 700;
 }
 
-.features-section {
-  padding: 4rem 0;
+.action-card {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
-.feature-card {
-  border: none;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+.action-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border-color: var(--accent-color);
 }
 
-.feature-card:hover {
-  transform: translateY(-10px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+.action-card .card-body {
+  position: relative;
+  padding: 2rem;
 }
 
-.feature-icon {
-  color: #1abc9c;
+.action-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: var(--light-accent-color);
+  color: var(--primary-color);
   margin-bottom: 1rem;
 }
 
-.how-it-works-section {
-  padding: 4rem 0;
-  background-color: #fff;
+.action-card .card-title {
+  color: var(--primary-color);
+  font-weight: 600;
 }
 
-.how-it-works-section ul li {
-  font-size: 1.1rem;
-  color: #34495e;
+.action-card .card-text {
+  color: var(--secondary-text);
 }
 
-.how-it-works-section .check-circle-icon {
-  color: #1abc9c;
+.go-arrow {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-size: 1.5rem;
+  color: var(--border-color);
+  transition: all 0.3s ease;
+}
+
+.action-card:hover .go-arrow {
+  color: var(--accent-color);
+  transform: translateX(5px);
 }

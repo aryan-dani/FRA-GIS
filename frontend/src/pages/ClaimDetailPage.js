@@ -1,10 +1,27 @@
 import React, { useState, useEffect } from "react";
-import { Container, Row, Col, Card, Spinner, Alert } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Card,
+  Spinner,
+  Alert,
+  Button,
+} from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
+import { ArrowLeft } from "react-bootstrap-icons";
 import axios from "axios";
 import WebGISMap from "../components/WebGISMap";
+import "./ClaimDetailPage.css";
 
 const API_URL = "http://localhost:5001";
+
+const DetailItem = ({ label, value }) => (
+  <div className="detail-item">
+    <span className="detail-item-label">{label}:</span>
+    <span className="detail-item-value">{value || "N/A"}</span>
+  </div>
+);
 
 function ClaimDetailPage() {
   const { id } = useParams();
@@ -31,9 +48,11 @@ function ClaimDetailPage() {
 
   if (loading) {
     return (
-      <Container className="text-center py-5">
-        <Spinner animation="border" />
-      </Container>
+      <div className="spinner-container">
+        <Spinner animation="border" role="status">
+          <span className="visually-hidden">Loading Claim Details...</span>
+        </Spinner>
+      </div>
     );
   }
 
@@ -54,66 +73,80 @@ function ClaimDetailPage() {
   }
 
   return (
-    <Container fluid className="py-4">
-      <Row>
-        <Col>
-          <Link to="/claims-data" className="btn btn-secondary mb-3">
-            Back to Data Table
-          </Link>
-        </Col>
-      </Row>
-      <Row>
-        <Col md={6}>
-          <Card className="mb-4">
-            <Card.Header as="h3">Claim Details (ID: {claim.id})</Card.Header>
-            <Card.Body>
-              <p>
-                <strong>Name:</strong> {claim.name || "N/A"}
-              </p>
-              <p>
-                <strong>Village:</strong> {claim.village || "N/A"}
-              </p>
-              <p>
-                <strong>District:</strong> {claim.district || "N/A"}
-              </p>
-              <p>
-                <strong>State:</strong> {claim.state || "N/A"}
-              </p>
-              <p>
-                <strong>Claim Type:</strong> {claim.claim_type || "N/A"}
-              </p>
-              <p>
-                <strong>Status:</strong> {claim.status || "N/A"}
-              </p>
-            </Card.Body>
-          </Card>
-          <Card>
-            <Card.Header as="h4">Raw Extracted Text</Card.Header>
-            <Card.Body>
-              <pre
-                style={{
-                  whiteSpace: "pre-wrap",
-                  wordBreak: "break-word",
-                  backgroundColor: "#f8f9fa",
-                  padding: "1rem",
-                  borderRadius: "0.25rem",
-                }}
-              >
-                {claim.raw_text || "No raw text available."}
-              </pre>
-            </Card.Body>
-          </Card>
-        </Col>
-        <Col md={6}>
-          <Card>
-            <Card.Header as="h4">Claim Area</Card.Header>
-            <Card.Body className="p-0">
-              <WebGISMap claims={[claim]} />
-            </Card.Body>
-          </Card>
-        </Col>
-      </Row>
-    </Container>
+    <div className="claim-detail-page">
+      <Container fluid>
+        <div className="page-header">
+          <h1 className="page-title">Claim Details</h1>
+          <p className="page-subtitle">
+            Viewing full record for claim ID: <strong>{claim.id}</strong>
+          </p>
+        </div>
+
+        <Row>
+          <Col>
+            <Link to="/claims-data">
+              <Button variant="primary" className="back-button mb-3">
+                <ArrowLeft className="me-2" />
+                Back to Claims List
+              </Button>
+            </Link>
+          </Col>
+        </Row>
+
+        <Row className="mb-4">
+          <Col lg={5} xl={4} className="mb-4 mb-lg-0">
+            <Card className="h-100">
+              <Card.Header>
+                <div className="d-flex justify-content-between align-items-center">
+                  <h5 className="mb-0">Claimant Information</h5>
+                  <div
+                    className={`status-indicator status-${
+                      claim.status || "Pending"
+                    }`}
+                  >
+                    {claim.status || "Pending"}
+                  </div>
+                </div>
+              </Card.Header>
+              <Card.Body>
+                <DetailItem label="Name" value={claim.name} />
+                <DetailItem label="Village" value={claim.village} />
+                <DetailItem label="District" value={claim.district} />
+                <DetailItem label="State" value={claim.state} />
+                <DetailItem label="Claim Type" value={claim.claim_type} />
+              </Card.Body>
+            </Card>
+          </Col>
+          <Col lg={7} xl={8}>
+            <Card className="h-100">
+              <Card.Header>
+                <h5 className="mb-0">Geospatial Data</h5>
+              </Card.Header>
+              <Card.Body className="p-0">
+                <div className="map-container-detail">
+                  <WebGISMap claims={[claim]} />
+                </div>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+
+        <Row>
+          <Col>
+            <Card>
+              <Card.Header>
+                <h5 className="mb-0">Raw Extracted Text</h5>
+              </Card.Header>
+              <Card.Body>
+                <pre className="raw-text-container">
+                  {claim.raw_text || "No raw text available."}
+                </pre>
+              </Card.Body>
+            </Card>
+          </Col>
+        </Row>
+      </Container>
+    </div>
   );
 }
 

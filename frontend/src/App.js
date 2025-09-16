@@ -12,6 +12,7 @@ import AboutPage from "./pages/AboutPage";
 import ClaimsDataPage from "./pages/ClaimsDataPage";
 import ClaimDetailPage from "./pages/ClaimDetailPage";
 import AddClaimPage from "./pages/AddClaimPage";
+import AnalyticsPage from "./pages/AnalyticsPage"; // Import the new page
 import { ToastContainer } from "react-toastify";
 
 function App() {
@@ -34,6 +35,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/claims-data" element={<ClaimsDataPage />} />
+          <Route path="/analytics" element={<AnalyticsPage />} />
           <Route path="/claim/:id" element={<ClaimDetailPage />} />
           <Route path="/add-claim" element={<AddClaimPage />} />
           <Route path="/about" element={<AboutPage />} />
