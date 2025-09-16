@@ -1,13 +1,36 @@
 import React, { useState, useMemo } from "react";
-import { Table, Form, Row, Col, InputGroup, Spinner } from "react-bootstrap";
-import { Search } from "react-bootstrap-icons";
+import {
+  Table,
+  Form,
+  Row,
+  Col,
+  InputGroup,
+  Spinner,
+  Dropdown,
+  Badge,
+} from "react-bootstrap";
+import { Search, Eye } from "react-bootstrap-icons";
+import { Link } from "react-router-dom";
 
-function ClaimsTable({ claims, loading }) {
+const getStatusBadge = (status) => {
+  switch (status) {
+    case "Approved":
+      return "success";
+    case "Rejected":
+      return "danger";
+    case "Pending":
+    default:
+      return "warning";
+  }
+};
+
+function ClaimsTable({ claims, loading, onStatusChange }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [filters, setFilters] = useState({
     state: "",
     district: "",
     claim_type: "",
+    status: "",
   });
 
   const handleFilterChange = (e) => {
@@ -18,7 +41,6 @@ function ClaimsTable({ claims, loading }) {
   const filteredClaims = useMemo(() => {
     return claims
       .filter((claim) => {
-        // Text search
         const searchLower = searchTerm.toLowerCase();
         return (
           !searchTerm ||
@@ -29,16 +51,15 @@ function ClaimsTable({ claims, loading }) {
         );
       })
       .filter((claim) => {
-        // Filter dropdowns
         return (
           (!filters.state || claim.state === filters.state) &&
           (!filters.district || claim.district === filters.district) &&
-          (!filters.claim_type || claim.claim_type === filters.claim_type)
+          (!filters.claim_type || claim.claim_type === filters.claim_type) &&
+          (!filters.status || claim.status === filters.status)
         );
       });
   }, [claims, searchTerm, filters]);
 
-  // Get unique values for filter dropdowns
   const uniqueStates = useMemo(
     () => [...new Set(claims.map((c) => c.state).filter(Boolean))],
     [claims]
@@ -51,24 +72,28 @@ function ClaimsTable({ claims, loading }) {
     () => [...new Set(claims.map((c) => c.claim_type).filter(Boolean))],
     [claims]
   );
+  const uniqueStatuses = useMemo(
+    () => [...new Set(claims.map((c) => c.status).filter(Boolean))],
+    [claims]
+  );
 
   return (
     <div>
-      <Row className="filter-bar">
-        <Col lg={4} className="mb-2">
-          <InputGroup className="live-search-bar">
+      <Row className="filter-bar mb-3">
+        <Col lg={3} md={6} className="mb-2">
+          <InputGroup>
             <InputGroup.Text>
               <Search />
             </InputGroup.Text>
             <Form.Control
               type="text"
-              placeholder="Live search by name, village..."
+              placeholder="Live search..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
           </InputGroup>
         </Col>
-        <Col lg={3} md={4} className="mb-2">
+        <Col lg={2} md={6} className="mb-2">
           <Form.Select
             name="state"
             value={filters.state}
@@ -82,7 +107,7 @@ function ClaimsTable({ claims, loading }) {
             ))}
           </Form.Select>
         </Col>
-        <Col lg={3} md={4} className="mb-2">
+        <Col lg={2} md={4} className="mb-2">
           <Form.Select
             name="district"
             value={filters.district}
@@ -110,6 +135,20 @@ function ClaimsTable({ claims, loading }) {
             ))}
           </Form.Select>
         </Col>
+        <Col lg={2} md={4} className="mb-2">
+          <Form.Select
+            name="status"
+            value={filters.status}
+            onChange={handleFilterChange}
+          >
+            <option value="">By Status</option>
+            {uniqueStatuses.map((status) => (
+              <option key={status} value={status}>
+                {status}
+              </option>
+            ))}
+          </Form.Select>
+        </Col>
       </Row>
 
       <div className="claims-table-container">
@@ -120,17 +159,15 @@ function ClaimsTable({ claims, loading }) {
               <th>Name</th>
               <th>Village</th>
               <th>District</th>
-              <th>State</th>
               <th>Claim Type</th>
               <th>Status</th>
-              <th>Latitude</th>
-              <th>Longitude</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="7" className="text-center">
                   <Spinner animation="border" size="sm" /> Updating...
                 </td>
               </tr>
@@ -141,16 +178,46 @@ function ClaimsTable({ claims, loading }) {
                   <td>{claim.name || "N/A"}</td>
                   <td>{claim.village || "N/A"}</td>
                   <td>{claim.district || "N/A"}</td>
-                  <td>{claim.state || "N/A"}</td>
                   <td>{claim.claim_type || "N/A"}</td>
-                  <td>{claim.status || "N/A"}</td>
-                  <td>{claim.latitude}</td>
-                  <td>{claim.longitude}</td>
+                  <td>
+                    <Dropdown
+                      onSelect={(newStatus) =>
+                        onStatusChange(claim.id, newStatus)
+                      }
+                    >
+                      <Dropdown.Toggle
+                        variant={getStatusBadge(claim.status)}
+                        id={`dropdown-status-${claim.id}`}
+                        size="sm"
+                      >
+                        {claim.status || "N/A"}
+                      </Dropdown.Toggle>
+                      <Dropdown.Menu>
+                        <Dropdown.Item eventKey="Approved">
+                          Approved
+                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Rejected">
+                          Rejected
+                        </Dropdown.Item>
+                        <Dropdown.Item eventKey="Pending">
+                          Pending
+                        </Dropdown.Item>
+                      </Dropdown.Menu>
+                    </Dropdown>
+                  </td>
+                  <td>
+                    <Link
+                      to={`/claim/${claim.id}`}
+                      className="btn btn-outline-primary btn-sm"
+                    >
+                      <Eye className="me-1" /> View
+                    </Link>
+                  </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan="9" className="text-center">
+                <td colSpan="7" className="text-center">
                   No claims found.
                 </td>
               </tr>

@@ -46,7 +46,7 @@ function DashboardPage() {
               <CloudUpload size={20} /> Upload New FRA Document
             </Card.Header>
             <Card.Body>
-              <UploadForm onUploadSuccess={fetchClaims} />
+              <UploadForm />
             </Card.Body>
           </Card>
         </Col>

@@ -1,0 +1,11 @@
+# Python virtual environment
+.venv/
+venv/
+__pycache__/
+
+# Environment variables
+.env
+
+# Google Cloud credentials
+gcp-credentials.json
+spry-optics-445619-c9-bf9d720dced4.json

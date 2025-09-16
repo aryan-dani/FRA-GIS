@@ -7,6 +7,7 @@ import {
   InfoCircle,
   Speedometer2,
   Table,
+  GraphUp, // Import new icon
 } from "react-bootstrap-icons";
 import "./Navbar.css";
 
@@ -36,6 +37,7 @@ function AppNavbar() {
             <Nav.Link as={NavLink} to="/claims-data">
               <Table className="me-1" /> Data Table
             </Nav.Link>
+            {/* Link to Analytics will be handled by the ClaimsDataPage for now */}
             <Nav.Link as={NavLink} to="/about">
               <InfoCircle className="me-1" /> About
             </Nav.Link>

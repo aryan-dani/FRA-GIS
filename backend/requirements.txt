@@ -3,3 +3,7 @@ python-dotenv
 supabase
 Flask-Cors
 gunicorn
+pytesseract
+spacy
+opencv-python
+pdf2image

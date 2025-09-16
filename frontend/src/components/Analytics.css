@@ -1,0 +1,10 @@
+.analytics-card {
+  margin-top: 2rem;
+}
+
+.chart-title {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 1.2rem;
+  color: var(--primary-color);
+}
