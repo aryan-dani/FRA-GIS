@@ -32,7 +32,7 @@ function ClaimDetailPage() {
       setLoading(true);
       try {
         const { data, error } = await supabase
-          .from("claims")
+          .from("FRA_Claims")
           .select("*")
           .eq("id", id)
           .single(); // Fetch a single record

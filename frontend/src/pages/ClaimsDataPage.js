@@ -14,7 +14,7 @@ function ClaimsDataPage() {
     setLoading(true);
     setError("");
     try {
-      const { data, error } = await supabase.from("claims").select("*");
+      const { data, error } = await supabase.from("FRA_Claims").select("*");
       if (error) throw error;
 
       const claimsWithStatus = data.map((claim) => ({
@@ -37,7 +37,7 @@ function ClaimsDataPage() {
   const handleStatusChange = async (claimId, newStatus) => {
     try {
       const { error } = await supabase
-        .from("claims")
+        .from("FRA_Claims")
         .update({ status: newStatus })
         .eq("id", claimId);
 

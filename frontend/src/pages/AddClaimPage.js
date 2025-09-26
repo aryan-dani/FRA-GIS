@@ -61,7 +61,7 @@ const AddClaimPage = () => {
     const { entities, ...insertData } = formData;
 
     try {
-      const { error } = await supabase.from("claims").insert([insertData]);
+      const { error } = await supabase.from("FRA_Claims").insert([insertData]);
 
       if (error) throw error;
 

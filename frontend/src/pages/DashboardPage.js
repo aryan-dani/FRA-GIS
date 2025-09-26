@@ -15,7 +15,7 @@ function DashboardPage() {
     setLoading(true);
     setError("");
     try {
-      const { data, error } = await supabase.from("claims").select("*");
+      const { data, error } = await supabase.from("FRA_Claims").select("*");
 
       if (error) {
         throw error;
