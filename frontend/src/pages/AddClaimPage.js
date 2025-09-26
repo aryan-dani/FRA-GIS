@@ -9,7 +9,7 @@ import {
   Col,
   Spinner,
 } from "react-bootstrap";
-import axios from "axios";
+import { supabase } from "../supabaseClient"; // Import supabase client
 import { toast } from "react-toastify";
 
 const AddClaimPage = () => {
@@ -26,12 +26,12 @@ const AddClaimPage = () => {
     latitude: "",
     longitude: "",
     raw_text: "",
-    entities: null,
+    // Supabase doesn't need the 'entities' field in the table
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    // Pre-fill form if data is passed from the upload page
+    // Pre-fill form if data is passed from a previous step (though OCR is disabled)
     if (location.state && location.state.extractedData) {
       const { extractedData } = location.state;
       setFormData({
@@ -44,7 +44,6 @@ const AddClaimPage = () => {
         latitude: extractedData.latitude || "",
         longitude: extractedData.longitude || "",
         raw_text: extractedData.raw_text || "",
-        entities: extractedData.raw_entities || null,
       });
     }
   }, [location.state]);
@@ -58,14 +57,20 @@ const AddClaimPage = () => {
     e.preventDefault();
     setIsSubmitting(true);
 
+    // Remove the 'entities' field if it exists before sending to Supabase
+    const { entities, ...insertData } = formData;
+
     try {
-      await axios.post("http://localhost:5001/api/claims", formData);
+      const { error } = await supabase.from("claims").insert([insertData]);
+
+      if (error) throw error;
+
       toast.success("Claim submitted successfully!");
       setTimeout(() => {
         navigate("/claims-data");
-      }, 1500); // Wait for toast to be visible before navigating
+      }, 1500);
     } catch (err) {
-      toast.error(err.response?.data?.error || "An unexpected error occurred.");
+      toast.error(err.message || "An unexpected error occurred.");
       setIsSubmitting(false);
     }
   };
@@ -81,7 +86,7 @@ const AddClaimPage = () => {
         <Card.Body>
           {isReviewMode && (
             <div className="mb-3 p-3 border rounded bg-light">
-              <h5>Extracted Entities</h5>
+              <h5>Extracted Entities (Review Mode)</h5>
               <p>
                 <strong>Claimant:</strong>{" "}
                 {formData.name || <span className="text-muted">Not found</span>}

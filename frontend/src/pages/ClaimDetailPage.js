@@ -10,11 +10,9 @@ import {
 } from "react-bootstrap";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft } from "react-bootstrap-icons";
-import axios from "axios";
+import { supabase } from "../supabaseClient"; // Import supabase client
 import WebGISMap from "../components/WebGISMap";
 import "./ClaimDetailPage.css";
-
-const API_URL = "http://localhost:5001";
 
 const DetailItem = ({ label, value }) => (
   <div className="detail-item">
@@ -33,8 +31,14 @@ function ClaimDetailPage() {
     const fetchClaim = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${API_URL}/api/claims/${id}`);
-        setClaim(response.data);
+        const { data, error } = await supabase
+          .from("claims")
+          .select("*")
+          .eq("id", id)
+          .single(); // Fetch a single record
+
+        if (error) throw error;
+        setClaim(data);
       } catch (err) {
         setError("Failed to fetch claim details.");
         console.error(err);

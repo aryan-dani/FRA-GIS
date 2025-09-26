@@ -10,7 +10,10 @@ function Footer() {
           &copy; {new Date().getFullYear()} FRA-GIS Platform. All Rights
           Reserved.
         </p>
-        <small>A Smart India Hackathon Prototype by Team Evonex</small>
+        <small>
+          A Smart India Hackathon Prototype developed by{" "}
+          <span className="developer-name">Aryan Dani</span> from Team Evonex
+        </small>
       </Container>
     </footer>
   );

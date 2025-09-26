@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Form, Button, Spinner, ProgressBar } from "react-bootstrap";
 import { toast } from "react-toastify";
 
-const API_URL = "http://localhost:5001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 function UploadForm() {
   const [file, setFile] = useState(null);

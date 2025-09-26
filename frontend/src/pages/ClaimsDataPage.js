@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Container, Spinner, Alert } from "react-bootstrap";
-import axios from "axios";
+import { supabase } from "../supabaseClient"; // Import supabase client
 
 import ClaimsTable from "../components/ClaimsTable";
 import "./ClaimsDataPage.css";
-
-const API_URL = "http://localhost:5001";
 
 function ClaimsDataPage() {
   const [claims, setClaims] = useState([]);
@@ -16,15 +14,17 @@ function ClaimsDataPage() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(`${API_URL}/api/claims`);
-      const claimsWithStatus = response.data.map((claim) => ({
+      const { data, error } = await supabase.from("claims").select("*");
+      if (error) throw error;
+
+      const claimsWithStatus = data.map((claim) => ({
         ...claim,
         status: claim.status || "Pending",
       }));
       setClaims(claimsWithStatus);
     } catch (error) {
-      setError("Failed to fetch claims data. Is the backend server running?");
-      console.error("Failed to fetch claims:", error);
+      setError("Failed to fetch claims data. Check RLS policies in Supabase.");
+      console.error("Error fetching claims:", error);
     } finally {
       setLoading(false);
     }
@@ -36,9 +36,13 @@ function ClaimsDataPage() {
 
   const handleStatusChange = async (claimId, newStatus) => {
     try {
-      await axios.put(`${API_URL}/api/claims/${claimId}/status`, {
-        status: newStatus,
-      });
+      const { error } = await supabase
+        .from("claims")
+        .update({ status: newStatus })
+        .eq("id", claimId);
+
+      if (error) throw error;
+
       // Re-fetch claims to show the updated status
       fetchClaims();
     } catch (error) {

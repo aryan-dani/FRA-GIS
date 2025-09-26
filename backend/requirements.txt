@@ -7,3 +7,4 @@ pytesseract
 spacy
 opencv-python
 pdf2image
+google-cloud-vision

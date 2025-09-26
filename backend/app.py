@@ -16,6 +16,17 @@ import cv2
 # Load environment variables from .env file
 load_dotenv()
 
+# Initialize Flask App
+app = Flask(__name__)
+
+# --- CORS Setup ---
+# Allow requests from your local frontend and your deployed GitHub Pages site
+origins = [
+    "http://localhost:3000",
+    "https://aryan-dani.github.io"
+]
+CORS(app, resources={r"/api/*": {"origins": origins}})
+
 # Load spaCy model
 nlp = spacy.load("en_core_web_lg")
 
@@ -26,15 +37,13 @@ pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tessera
 # Instantiate the client once globally for efficiency
 vision_client = vision.ImageAnnotatorClient()
 
-app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
-
 # --- Supabase Setup ---
-SUPABASE_URL = os.getenv("SUPABASE_URL")
-SUPABASE_KEY = os.getenv("SUPABASE_KEY")
+# Use os.environ.get for deployed environments
+SUPABASE_URL = os.environ.get("SUPABASE_URL")
+SUPABASE_KEY = os.environ.get("SUPABASE_SERVICE_KEY") # Use the SERVICE KEY for backend operations
 
 if not SUPABASE_URL or not SUPABASE_KEY:
-    raise ValueError("Supabase URL and Key must be set in the .env file.")
+    raise ValueError("Supabase URL and Service Key must be set in the environment.")
 
 supabase: Client = create_client(SUPABASE_URL, SUPABASE_KEY)
 

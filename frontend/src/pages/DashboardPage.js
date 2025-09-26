@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Container, Row, Col, Spinner, Alert } from "react-bootstrap";
-import axios from "axios";
+import { Container, Row, Col, Spinner, Alert, Card } from "react-bootstrap";
+import { supabase } from "../supabaseClient"; // Import supabase client
 
-import UploadForm from "../components/UploadForm";
 import WebGISMap from "../components/WebGISMap";
 import DashboardStats from "../components/DashboardStats";
 import "./DashboardPage.css";
-
-const API_URL = "http://localhost:5001";
 
 function DashboardPage() {
   const [claims, setClaims] = useState([]);
@@ -18,11 +15,15 @@ function DashboardPage() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(`${API_URL}/api/claims`);
-      setClaims(response.data);
+      const { data, error } = await supabase.from("claims").select("*");
+
+      if (error) {
+        throw error;
+      }
+      setClaims(data);
     } catch (error) {
-      setError("Failed to fetch claims. Is the backend server running?");
-      console.error("Failed to fetch claims:", error);
+      setError("Failed to fetch claims from Supabase. Check RLS policies.");
+      console.error("Error fetching claims:", error);
     } finally {
       setLoading(false);
     }
@@ -71,14 +72,18 @@ function DashboardPage() {
                 </div>
               </Col>
               <Col lg={4}>
-                <div className="card shadow-sm">
-                  <div className="card-header">
+                <Card className="shadow-sm">
+                  <Card.Header>
                     <h2 className="h5 mb-0">Upload New Document</h2>
-                  </div>
-                  <div className="card-body">
-                    <UploadForm onUploadSuccess={fetchClaims} />
-                  </div>
-                </div>
+                  </Card.Header>
+                  <Card.Body>
+                    <p className="text-muted">
+                      The document upload and OCR feature is disabled on the
+                      live site. Please use the "Add New Claim" button on the
+                      Claims Data page to add claims manually.
+                    </p>
+                  </Card.Body>
+                </Card>
               </Col>
             </Row>
           </>
