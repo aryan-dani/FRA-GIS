@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { Container, Spinner, Alert } from "react-bootstrap";
-import axios from "axios";
+import { supabase } from "../supabaseClient";
 import Analytics from "../components/Analytics";
 import "./AnalyticsPage.css";
-
-const API_URL = "http://localhost:5001";
 
 function AnalyticsPage() {
   const [claims, setClaims] = useState([]);
@@ -15,10 +13,11 @@ function AnalyticsPage() {
     setLoading(true);
     setError("");
     try {
-      const response = await axios.get(`${API_URL}/api/claims`);
-      setClaims(response.data);
+      const { data, error } = await supabase.from("FRA_Claims").select("*");
+      if (error) throw error;
+      setClaims(data);
     } catch (error) {
-      setError("Failed to fetch claims data. Is the backend server running?");
+      setError("Failed to fetch claims data from Supabase.");
       console.error("Failed to fetch claims:", error);
     } finally {
       setLoading(false);

@@ -13,6 +13,7 @@ import {
   PointElement,
   LineElement,
   TimeScale,
+  Filler, // Import Filler
 } from "chart.js";
 import "chartjs-adapter-date-fns";
 import "./Analytics.css";
@@ -27,7 +28,8 @@ ChartJS.register(
   ArcElement,
   PointElement,
   LineElement,
-  TimeScale
+  TimeScale,
+  Filler // Register Filler
 );
 
 function StatCard({ title, value, icon, color }) {
