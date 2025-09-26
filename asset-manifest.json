@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/FRA-GIS/static/css/main.9e8b714e.css",
-    "main.js": "/FRA-GIS/static/js/main.9d76f53f.js",
+    "main.css": "/FRA-GIS/static/css/main.0c5e9181.css",
+    "main.js": "/FRA-GIS/static/js/main.dc66b4ac.js",
     "static/js/453.670e15c7.chunk.js": "/FRA-GIS/static/js/453.670e15c7.chunk.js",
     "index.html": "/FRA-GIS/index.html",
-    "main.9e8b714e.css.map": "/FRA-GIS/static/css/main.9e8b714e.css.map",
-    "main.9d76f53f.js.map": "/FRA-GIS/static/js/main.9d76f53f.js.map",
+    "main.0c5e9181.css.map": "/FRA-GIS/static/css/main.0c5e9181.css.map",
+    "main.dc66b4ac.js.map": "/FRA-GIS/static/js/main.dc66b4ac.js.map",
     "453.670e15c7.chunk.js.map": "/FRA-GIS/static/js/453.670e15c7.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.9e8b714e.css",
-    "static/js/main.9d76f53f.js"
+    "static/css/main.0c5e9181.css",
+    "static/js/main.dc66b4ac.js"
   ]
 }
